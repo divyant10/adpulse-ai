@@ -1,0 +1,70 @@
+/* ---------------- GLOBAL ---------------- */
+
+body {
+    font-size: 18px;
+}
+
+/* Headings */
+
+h1 {
+    font-size: 44px !important;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 32px !important;
+}
+
+h3 {
+    font-size: 26px !important;
+}
+
+
+/* ---------------- METRIC CARDS ---------------- */
+
+section[data-testid="stMetric"] {
+    padding: 18px;
+    border-radius: 12px;
+}
+
+
+/* ---------------- RADIO NAVIGATION ---------------- */
+
+div[role="radiogroup"] label {
+    padding: 10px;
+    border-radius: 8px;
+}
+
+div[role="radiogroup"] label:hover {
+    background-color: rgba(120,120,120,0.1);
+}
+
+
+/* ---------------- FILE UPLOADER ---------------- */
+
+[data-testid="stFileUploader"] {
+    padding: 12px;
+    border-radius: 10px;
+}
+
+
+/* ---------------- CHAT MESSAGES ---------------- */
+
+[data-testid="stChatMessage"] {
+    padding: 12px;
+    border-radius: 10px;
+}
+
+
+/* ---------------- DATAFRAME ---------------- */
+
+[data-testid="stDataFrame"] {
+    border-radius: 10px;
+}
+
+
+/* ---------------- PROGRESS BAR ---------------- */
+
+.stProgress > div > div > div > div {
+    background-color: #22c55e;
+}
