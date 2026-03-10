@@ -1,12 +1,19 @@
-st.write("APP STARTED")
 import sys
 import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 import streamlit as st
 import pandas as pd
 from streamlit_autorefresh import st_autorefresh
+
+# ---------------- PATH FIX ----------------
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(BASE_DIR)
+
+# ---------------- DEBUG ----------------
+
+st.write("APP STARTED")
+
+# ---------------- IMPORT MODULES ----------------
 
 from analysis.ads_analyzer import analyze_ads
 from analysis.support_analyzer import analyze_support
@@ -28,7 +35,6 @@ from components.charts import (
 
 from components.gauge import show_health_gauge
 
-
 # ---------------- PAGE CONFIG ----------------
 
 st.set_page_config(
@@ -38,11 +44,17 @@ st.set_page_config(
 
 # ---------------- LOAD CSS ----------------
 
-with open("styles.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+css_path = os.path.join(BASE_DIR, "styles.css")
+
+if os.path.exists(css_path):
+    with open(css_path) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+else:
+    st.warning("styles.css not found")
+
+# ---------------- TITLE ----------------
 
 st.title("🚀 AdPulse AI – Advertising Diagnostics Platform")
-
 
 # ---------------- SIDEBAR ----------------
 
@@ -72,7 +84,6 @@ uploaded_support = st.sidebar.file_uploader(
     type=["csv"]
 )
 
-
 # ---------------- SAFE CSV LOADER ----------------
 
 def load_csv_safe(path):
@@ -91,9 +102,13 @@ def load_csv_safe(path):
 
     except Exception as e:
 
-        st.warning(f"Dataset error: {e}")
+        st.error(f"Dataset error: {e}")
         st.stop()
 
+# ---------------- DATA PATHS ----------------
+
+ads_path = os.path.join(BASE_DIR, "data", "ads_campaign_data.csv")
+support_path = os.path.join(BASE_DIR, "data", "support_tickets.csv")
 
 # ---------------- LOAD DATA ----------------
 
@@ -104,7 +119,7 @@ if uploaded_ads is not None:
 
 else:
 
-    ads_df = load_csv_safe("data/ads_campaign_data.csv")
+    ads_df = load_csv_safe(ads_path)
 
 
 if uploaded_support is not None:
@@ -113,8 +128,7 @@ if uploaded_support is not None:
 
 else:
 
-    support_df = load_csv_safe("data/support_tickets.csv")
-
+    support_df = load_csv_safe(support_path)
 
 # ---------------- ANALYSIS ----------------
 
@@ -122,7 +136,6 @@ ads_report = analyze_ads(ads_df)
 support_report = analyze_support(support_df)
 
 health_score = calculate_health_score(ads_df)
-
 
 # ---------------- DASHBOARD ----------------
 
@@ -167,7 +180,6 @@ if page == "📊 Dashboard":
 
     campaign_performance_chart(ads_df)
 
-
 # ---------------- CAMPAIGN ANALYSIS ----------------
 
 elif page == "📈 Campaign Analysis":
@@ -180,8 +192,7 @@ elif page == "📈 Campaign Analysis":
 
     st.subheader("Campaign Dataset Preview")
 
-    st.dataframe(ads_df.head(20), width="stretch")
-
+    st.dataframe(ads_df.head(20), use_container_width=True)
 
 # ---------------- SUPPORT ANALYSIS ----------------
 
@@ -201,7 +212,6 @@ elif page == "🎧 Support Analysis":
 
     st.write(support_report["Priority Distribution"])
 
-
 # ---------------- AI INSIGHTS ----------------
 
 elif page == "🤖 AI Insights":
@@ -220,7 +230,6 @@ elif page == "🤖 AI Insights":
         st.success("Analysis Complete")
 
         st.markdown(recommendations)
-
 
 # ---------------- AI ASSISTANT ----------------
 
@@ -272,7 +281,6 @@ User Question:
             {"role": "assistant", "content": response}
         )
 
-
 # ---------------- OPTIMIZATION ENGINE ----------------
 
 elif page == "⚡ Optimization Engine":
@@ -284,21 +292,21 @@ elif page == "⚡ Optimization Engine":
     st.subheader("Campaigns to Pause")
 
     if pause:
-        st.dataframe(ads_df.loc[pause], width="stretch")
+        st.dataframe(ads_df.loc[pause], use_container_width=True)
     else:
         st.info("No campaigns need to be paused")
 
     st.subheader("Campaigns to Scale")
 
     if scale:
-        st.dataframe(ads_df.loc[scale], width="stretch")
+        st.dataframe(ads_df.loc[scale], use_container_width=True)
     else:
         st.info("No campaigns recommended for scaling")
 
     st.subheader("Budget Waste Campaigns")
 
     if waste:
-        st.dataframe(ads_df.loc[waste], width="stretch")
+        st.dataframe(ads_df.loc[waste], use_container_width=True)
     else:
         st.info("No budget waste campaigns detected")
 
