@@ -1,3 +1,4 @@
+st.write("APP STARTED")
 import sys
 import os
 
